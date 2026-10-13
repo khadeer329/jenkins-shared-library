@@ -6,12 +6,19 @@ def call(String branch, String repoUrl) {
         }
 
         stage('Build') {
-            sh 'mvn clean package'
+            def mvnHome = tool 'Maven'
+
+            withEnv(["PATH+MAVEN=${mvnHome}/bin"]) {
+                sh 'mvn -version'
+                sh 'mvn clean package'
+            }
         }
 
         stage('Archive') {
-            archiveArtifacts artifacts: '**/target/*.war',
-                             fingerprint: true
+            archiveArtifacts(
+                artifacts: '**/target/*.war',
+                fingerprint: true
+            )
         }
     }
 }
