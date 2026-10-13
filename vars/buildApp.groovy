@@ -4,13 +4,14 @@ def call(String branch, String repoUrl) {
         stage('Checkout') {
             git branch: branch, url: repoUrl
         }
- 
+
         stage('Build') {
             sh 'mvn clean package'
         }
- 
+
         stage('Archive') {
-            archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
+            archiveArtifacts artifacts: '**/target/*.war',
+                             fingerprint: true
         }
     }
 }
