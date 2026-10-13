@@ -1,8 +1,16 @@
-def call(Map config = [:]) {
-    def appName = config.appName ?: 'MyApplication'
-
-    stage('Build Application') {
-        echo "Building ${appName}"
-        sh 'mvn clean package'
+// vars/buildApp.groovy
+def call(String branch, String repoUrl) {
+    node {
+        stage('Checkout') {
+            git branch: branch, url: repoUrl
+        }
+ 
+        stage('Build') {
+            sh 'mvn clean package'
+        }
+ 
+        stage('Archive') {
+            archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
+        }
     }
 }
